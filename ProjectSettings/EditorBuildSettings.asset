@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Chapter 1.unity
+    guid: 1e868d9eb4296e24c9e806720a10dfc7
+  - enabled: 1
+    path: Assets/Scenes/OLD Chapter 1.unity
+    guid: 1cadc700acea8c04a9b8e70f883bc43a
+  - enabled: 1
+    path: Assets/Scenes/Release.unity
+    guid: 6e271235efaaf5d4e9ccc12066cc9e8e
+  - enabled: 1
+    path: Assets/Scenes/Job.unity
+    guid: ab6d44f5f76ff8e4d88a25ad36ea8ffe
+  - enabled: 1
+    path: Assets/Scenes/Evil.unity
+    guid: a013ac5dd16aa58479cda73d139e1d44
+  - enabled: 1
+    path: Assets/Scenes/Runner.unity
+    guid: 9845999b13811a645ba49d19ee6f83d3
+  - enabled: 1
+    path: Assets/Scenes/Chapter 2.unity
+    guid: 4ad1c8a52df17d14fa6a48459446dd1e
+  - enabled: 1
+    path: Assets/Scenes/Question.unity
+    guid: 0ee919784da5d3b44b79eb40b70ba64a
+  - enabled: 1
+    path: Assets/Scenes/Prison.unity
+    guid: c4e8084269b373b45906a5469d3f87f8
+  - enabled: 1
+    path: Assets/Scenes/Garden.unity
+    guid: 76431c665176d15419a82fa51a250ec4
+  - enabled: 1
+    path: Assets/Scenes/Chapter 3.unity
+    guid: d18970c8c7bfcb646a1dd2d1b14d47d8
+  m_configObjects: {}
