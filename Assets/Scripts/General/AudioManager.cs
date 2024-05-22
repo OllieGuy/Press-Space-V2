@@ -36,7 +36,6 @@ public class AudioManager : MonoBehaviour
         }*/
         s.source.Play();
         //StartCoroutine(currentlyPlayingElement(s));
-        Debug.Log(name);
         //Debug.Log(currentlyPlaying.Count);
         return s.source.clip.length;
     }

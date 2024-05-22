@@ -23,8 +23,7 @@ public class ReleaseController : MonoBehaviour
 
     IEnumerator TextShow()
     {
-        //yield return new WaitForSeconds(am.PlayClip("RLSE_Narr_Thank", false) + 0.75f);
-        yield return new WaitForSeconds(am.PlayClip("C1_Narr_Intro", false) + 0.75f);
+        yield return new WaitForSeconds(am.PlayClip("Rlse_Narr_Thank", false) + 0.75f);
         StartCoroutine(FadeInText(Para1));
         yield return new WaitForSeconds(2f);
         StartCoroutine(FadeInText(Para2));

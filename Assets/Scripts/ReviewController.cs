@@ -8,35 +8,50 @@ public class ReviewController : MonoBehaviour
 {
     public GameObject Para1;
     public GameObject Para2;
+    public GameObject NameInsult;
     public GameObject Para3;
     public GameObject Rev1;
     public GameObject Rev2;
     public GameObject Rev3;
+    public GameObject SliderCanvas;
+    public GameObject ReleaseCanvas;
     public AudioManagerNew am;
-
-    bool selectAns = false;
+    public NameSlider ns;
 
     void Start()
     {
-        StartCoroutine(TextShow()); //change to this scene specific
+        StartCoroutine(SliderSection());
     }
 
-    void Update()
+    IEnumerator SliderSection()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        yield return new WaitForSeconds(am.PlayClip("Rvew_Narr_Intro", false) + 0.75f);
+        SliderCanvas.SetActive(true);
+        while (true)
         {
-
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(TextShow());
+                SliderCanvas.SetActive(false);
+                break;
+            }
+            yield return null;
         }
     }
 
     IEnumerator TextShow()
     {
-        //yield return new WaitForSeconds(am.PlayClip("RLSE_Narr_Thank", false) + 0.75f);
-        yield return new WaitForSeconds(am.PlayClip("C1_Narr_Intro", false) + 0.75f);
+        ReleaseCanvas.SetActive(true);
+        yield return new WaitForSeconds(am.PlayClip("Rvew_Narr_Thank", false) + 0.75f);
         StartCoroutine(FadeInText(Para1));
         yield return new WaitForSeconds(2f);
         StartCoroutine(FadeInText(Para2));
         yield return new WaitForSeconds(2f);
+        if (ns.nameSelected)
+        {
+            StartCoroutine(FadeInText(NameInsult));
+            yield return new WaitForSeconds(2f);
+        }
         StartCoroutine(FadeInText(Para3));
         yield return new WaitForSeconds(2f);
         StartCoroutine(FadeInText(Rev1));
@@ -45,9 +60,15 @@ public class ReviewController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(FadeInText(Rev3));
         yield return new WaitForSeconds(0.5f);
+        bool beenFrus = false;
         while (true)
         {
-            if (Input.anyKeyDown) SceneManager.LoadScene("Chapter 1");
+            if (Input.GetKeyDown(KeyCode.Space)) SceneManager.LoadScene("Chapter 1");
+            else if (Input.anyKeyDown && !beenFrus)
+            {
+                am.PlayClip("Rvew_Narr_Frustrated", false); //add the name here
+                beenFrus = true;
+            }
             yield return null;
         }
     }

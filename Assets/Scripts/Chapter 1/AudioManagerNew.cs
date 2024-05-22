@@ -9,8 +9,10 @@ using Unity.VisualScripting;
 public class AudioManagerNew : MonoBehaviour
 {
     public AudioClip[] audioClips;
+    public AudioClip[] sfxClips;
 
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource narrationSource;
+    [SerializeField] private AudioSource sfxSource;
     private AudioClip currentClip;
 
     bool isPlayingReal = false;
@@ -21,35 +23,43 @@ public class AudioManagerNew : MonoBehaviour
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource != null)
+        if (narrationSource != null)
         {
-            audioSource.playOnAwake = false;
-            audioSource.loop = false;
+            narrationSource.playOnAwake = false;
+            narrationSource.loop = false;
         }
     }
 
     public float PlayClip(string name, bool isInterrupt)
     {
-        //name = "C1_SFX_Bark";
         AudioClip clip = Array.Find(audioClips, sound => sound.name == name);
 
         if (isInterrupt)
         {
             if (interruptCoroutine != null) StopCoroutine(interruptCoroutine);
             interruptCoroutine = StartCoroutine(InterruptThenResume(clip));
-            return -1;
+            return clip.length;
         }
         else
         {
             currentClip = clip;
-            audioSource.clip = currentClip;
-            audioSource.Play();
+            narrationSource.clip = currentClip;
+            narrationSource.Play();
 
             lastRealClip = clip;
             playingRealCoroutine = StartCoroutine(PlayingReal(clip));
             return clip.length;
         }
+    }
+
+    public void PlaySFX(string name)
+    {
+        Debug.Log("gg4tg4g");
+        AudioClip clip = Array.Find(sfxClips, sound => sound.name == name);
+
+
+        sfxSource.clip = clip;
+        sfxSource.Play();
     }
 
     public bool CurrentlyPlaying()
@@ -61,14 +71,14 @@ public class AudioManagerNew : MonoBehaviour
     IEnumerator InterruptThenResume(AudioClip interruptClip)
     {
         StopCoroutine(playingRealCoroutine);
-        audioSource.Stop();
-        audioSource.clip = interruptClip;
-        audioSource.Play();
+        narrationSource.Stop();
+        narrationSource.clip = interruptClip;
+        narrationSource.Play();
 
-        yield return new WaitForSeconds(audioSource.clip.length + 0.5f);
+        yield return new WaitForSeconds(narrationSource.clip.length + 0.5f);
 
-        audioSource.clip = lastRealClip;
-        audioSource.Play();
+        narrationSource.clip = lastRealClip;
+        narrationSource.Play();
         StartCoroutine(PlayingReal(lastRealClip));
 
         interruptCoroutine = null;
@@ -77,7 +87,7 @@ public class AudioManagerNew : MonoBehaviour
     {
         isPlayingReal = true;
 
-        yield return new WaitForSeconds(audioSource.clip.length + 0.5f);
+        yield return new WaitForSeconds(narrationSource.clip.length + 0.5f);
 
         isPlayingReal = false;
         playingRealCoroutine = null;

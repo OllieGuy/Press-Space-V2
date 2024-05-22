@@ -9,7 +9,7 @@ public class Chapter1Controller : MonoBehaviour
 {
     public GameObject PSBlack;
     public GameObject counter;
-    public AudioManager amo;
+    public Transform psTrans;
     public AudioManagerNew am;
     public int acceptableKeyCounter = 0;
     int unacceptableKeyCounter = 0;
@@ -18,8 +18,7 @@ public class Chapter1Controller : MonoBehaviour
     bool buzzerEnabled = false;
     bool clicksEnabled = false;
 
-    //string[] interruptAudios = { "C1v2_Narr_Interrupt_1", "C1v2_Narr_Interrupt_2", "C1v2_Narr_Interrupt_3","C1v2_Narr_Interrupt_3", "C1v2_Narr_Interrupt_4" };
-    string[] interruptAudios = { "C1_Narr_Correction_3", "C1_Narr_Correction_2", "C1_SFX_Bark"};
+    string[] interruptAudios = { "C1v2_Narr_Interrupt_1", "C1v2_Narr_Interrupt_2", "C1v2_Narr_Interrupt_3","C1v2_Narr_Interrupt_3"};
     int currentInterruptions = 0;
     Coroutine currentNarration = null;
 
@@ -37,12 +36,16 @@ public class Chapter1Controller : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if (clicksEnabled) amo.play("C1_SFX_Click");
+            if (clicksEnabled) am.PlaySFX("C1_SFX_Click");
             handleEvents(true);
         }
         else if(Input.anyKeyDown && enabledInput)
         {
-            if (buzzerEnabled) amo.play("C1_SFX_Buzzer");
+            if (buzzerEnabled)
+            {
+                Instantiate(PSBlack, psTrans);
+                am.PlaySFX("C1_SFX_Buzzer");
+            }
             checkInterrupt();
             handleEvents(false);
         }
@@ -52,19 +55,26 @@ public class Chapter1Controller : MonoBehaviour
     {
         if (am.CurrentlyPlaying())
         {
-            if (currentInterruptions >= 3) SceneManager.LoadScene("Chapter 2");
-            else
+            if (currentInterruptions == 4)
+            {
+                StartCoroutine(interruptToChapter2());
+            }
+            else if (currentInterruptions < 4)
             {
                 am.PlayClip(interruptAudios[currentInterruptions], true);
-                currentInterruptions++;
                 StartCoroutine(disableInput(1.5f));
             }
+            currentInterruptions++;
         }
     }
 
     void narratorLine(string name)
     {
-        if (currentNarration == null) currentNarration = StartCoroutine(levelWhenAudioFinished(name));
+        if (currentNarration == null)
+        {
+            currentNarration = StartCoroutine(levelWhenAudioFinished(name));
+            StartCoroutine(disableInput(1.5f));
+        }
     }
 
     void handleEvents(bool space)
@@ -93,13 +103,16 @@ public class Chapter1Controller : MonoBehaviour
                 else
                 {
                     unacceptableKeyCounter++;
-                    if (unacceptableKeyCounter >= 5) narratorLine("C1v2_Narr_Sounds");
+                    if (unacceptableKeyCounter >= 5)
+                    {
+                        clicksEnabled = true;
+                        narratorLine("C1v2_Narr_Sounds");
+                    }
                 }
                 break;
             case 3:
                 if (space)
                 {
-                    amo.play("C1_SFX_Key");
                     acceptableKeyCounter++;
                     if (acceptableKeyCounter >= 20) SceneManager.LoadScene("Review");
                 }
@@ -137,8 +150,11 @@ public class Chapter1Controller : MonoBehaviour
                 {
                     unacceptableKeyCounter++;
                     acceptableKeyCounter = 0;
-                    if (unacceptableKeyCounter >= 5) narratorLine("C1v2_Narr_Buzzer");
-                    buzzerEnabled = true;
+                    if (unacceptableKeyCounter >= 5)
+                    { 
+                        buzzerEnabled = true;
+                        narratorLine("C1v2_Narr_Buzzer"); 
+                    }
                 }
                 break;
             case 6:
@@ -182,7 +198,7 @@ public class Chapter1Controller : MonoBehaviour
 
                 else yield return new WaitForSeconds(0.5f);
             }
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Runner");
         }
         else
         {
@@ -196,6 +212,12 @@ public class Chapter1Controller : MonoBehaviour
             SceneManager.LoadScene("Chapter 2");
         }
     }
+    IEnumerator interruptToChapter2()
+    {
+        enabledInput = false;
+        yield return new WaitForSeconds(am.PlayClip("C1v2_Narr_Interrupt_4", true));
+        SceneManager.LoadScene("Chapter 2");
+    }
 
     IEnumerator levelWhenAudioFinished(string name)
     {
@@ -206,7 +228,7 @@ public class Chapter1Controller : MonoBehaviour
 
             else yield return new WaitForSeconds(0.5f);
         }
-        Debug.Log("ok done");
+        if (level == 0) Instantiate(PSBlack, psTrans); //super janky
         level++;
         acceptableKeyCounter = 0;
         unacceptableKeyCounter = 0;

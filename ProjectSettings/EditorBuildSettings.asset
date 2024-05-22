@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Release.unity
     guid: 6e271235efaaf5d4e9ccc12066cc9e8e
   - enabled: 1
+    path: Assets/Scenes/Review.unity
+    guid: 3588ebaab6708f14c80c9c06dd0d2477
+  - enabled: 1
     path: Assets/Scenes/Job.unity
     guid: ab6d44f5f76ff8e4d88a25ad36ea8ffe
   - enabled: 1

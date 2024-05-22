@@ -12,6 +12,8 @@ public class NameSlider : MonoBehaviour
     public TextMeshProUGUI textMeshPro;
     public Slider indexSlider;
 
+    public bool nameSelected;
+
     private void Awake()
     {
         if (indexSlider != null)
@@ -25,5 +27,7 @@ public class NameSlider : MonoBehaviour
         int index = Mathf.Clamp(Mathf.RoundToInt(value), 0, 149);
 
         textMeshPro.text = names[index];
+
+        if (!nameSelected) nameSelected = true;
     }
 }
